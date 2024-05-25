@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!-- Primary Meta Tags -->
+	<title>LinkPe | UPI LINK Generator</title>
+	<meta name="title" content="LinkPe | UPI LINK Generator">
+
+	<style>
+
+
+
+.text-box {
+  padding: 10px;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid #000;
+}
+
+.card-content {
+  padding: 10px 20px;
+}
+
+a {
+  text-decoration: none;
+}
+.btn{
+	border: none;
+	outline: none;
+	border-radius: 10px;
+	padding: 10px 40px;
+	background: transparent;
+	border: 3px solid green;
+	color: green;
+	cursor: pointer;
+	transition: .3s;
+}
+.btn:hover{
+	background-color: green;
+	color: #ffffff;
+}
+
+/* payment window css */
+
+.paymentwindow{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  border-radius: 10px;
+  transition: .3s;
+  width: 800px;
+}
+
+.avatararea{
+    width: 100%;
+}
+.avatarsection{
+        display: flex;
+        align-items: center;
+    }
+
+.avatarsection model-viewer{
+    height: 500px;
+    /* position: relative; */
+}
+.buyshoplogo img{
+	height: 100px;
+	width: 120px;
+}
+.buyshoplogo{
+	text-align: center;
+	margin-bottom: 60px;
+}
+.labels{
+	color: #000;
+	font-size: 18px;
+	font-weight: 600;
+}
+.inputs{
+	margin: 20px 0px;
+}
+.inputs input{
+	margin: 6px 0px;
+}
+.paymentwindow:hover {
+  box-shadow: 10px 6px 10px #ccc;
+}
+
+	</style>
+<body>
+
+
+	<div class="buyshoplogo"><img src="logo.png" alt="logo"></div>
+
+	<div class="paymentwindow">
+
+		<div class="card">
+			<div class="card-content">
+			
+				<img src="https://www.shutterstock.com/image-vector/kerala-india-19-07-2023-260nw-2334125251.jpg" height="100">
+				<br>
+				<div id="linkpediv" style="display:none;">
+					<textarea class='text-box' rows="4" cols="30" id='linkpeURL'></textarea>
+					<br><br>
+					<a onclick='copyUpiUrl()' class='btn' id='btn-copy'>Copy Link</a>
+					<a id='whatsapp' class="btn">Share Link</a>
+				</div>
+				<form id="linkpeform">
+					<div class="inputs">
+						<label  class="labels">Enter Name:</label><br>
+						<input type="name" name="pn" class="text-box" placeholder="Enter your name:">
+					</div>
+
+					<div class="inputs">
+						<label class="labels">Enter Upi Id:</label><br>
+						<input type="email" name="pa" class="text-box" placeholder="Enter UPI Id" required>
+					</div>
+
+					<div class="inputs">
+						<label class="labels">Enter Amount:</label><br>
+						<input type="number" name="am" class="text-box" placeholder="INR">
+					</div>
+
+					<div class="inputs">
+						<button type="submit" class="btn">Submit</button>
+					</div>
+				</form>
+				<br>
+			</div>
+		</div>
+
+		<div class="avatarsection">
+			<model-viewer src="paymentAvatars/scene.gltf" alt="A 3D model of a men" shadow-intensity="1" camera-controls auto-rotate>
+			</model-viewer>
+		</div>
+
+	</div>
+
+		
+
+
+
+</body>
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+<script>
+
+
+
+
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	const pn = urlParams.get('pn');
+	const pa = urlParams.get('pa');
+	const am = urlParams.get('am');
+	if (pa !== null) {
+		// check prod or dev
+		var linkpeURL = window.location.hostname;
+		if (linkpeURL.includes("localhost")) {
+			console.log("dev");
+			linkpeURL = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/index.html`;
+		} else {
+			linkpeURL = `${window.location.protocol}//${window.location.hostname}/linkpe`;
+		}
+
+		linkpeURL += `?pa=${pa}&pn=${pn}&cu=INR`;
+		if (!isNaN(am) && am !== null && am !== "") {
+			linkpeURL += `&am=${am}`;
+		}
+
+		document.getElementById("linkpeURL").innerHTML = linkpeURL;
+		document.getElementById("whatsapp").href = "https://wa.me/?text=Hi%2C%20You%20can%20pay%20me%20by%20this%20Upi%20Payment%20Link%0A%20" + encodeURIComponent(linkpeURL);
+		document.getElementById("linkpediv").style.display = "block";
+		document.getElementById("linkpeform").style.display = "none";
+	}
+	function copyUpiUrl() {
+		var copylinkpe = document.getElementById("linkpeURL");
+		copylinkpe.select();
+		copylinkpe.setSelectionRange(0, 99999)
+		document.execCommand("copy");
+		document.getElementById("btn-copy").innerHTML = "Copied";
+	}
+</script>
+
+</html>
